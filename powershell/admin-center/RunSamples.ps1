@@ -48,7 +48,7 @@ function RunTests
     # 3. Change EnvironmentType from OnlyEnvironments to ExceptEnvironments
     # 4. Remove the test policy
     ChangeOnlyToExceptEnvironmentsPolicyTests -EnvironmentDisplayName $EnvironmentDisplayName
-
+    
     # 1. Clean test policies
     # 2. Change to a user who is not GlobalAdmin
     # 3. Create test policy for SingleEnvironment
@@ -63,7 +63,7 @@ function RunTests
         -TenantAdminPassword $TenantAdminPassword `
         -EnvironmentAdminName $EnvironmentAdminName `
         -EnvironmentAdminPassword $EnvironmentAdminPassword
-
+    
     # 1. Clean test policies
     # 2. Create a test policy for AllEnvironments
     # 3. Create a test policy for OnlyEnvironments
@@ -123,6 +123,37 @@ function RunTests
     #13. Create/Update the policy connector configuration.
     #14. Remove the policy connector configuration if it already exist.
     DLPPolicyConnectorEndpointControlCrud
+    
+    # 1. Change to EnvironmentAdmin
+    # 2. Create an environment if not exist
+    # 3. Call Add-CustomConnectorToPolicySample
+    # 4. Call Remove-CustomConnectorToPolicySample
+    # 5. Call Add-ConnectorToBusinessDataGroupSample
+    # 6. Call Remove-ConnectorToBusinessDataGroupSample
+    CustomerConnectorUpdateTests  `
+        -EnvironmentDisplayName $EnvironmentDisplayName `
+        -EndPoint $EndPoint `
+        -TenantAdminName $TenantAdminName `
+        -TenantAdminPassword $TenantAdminPassword `
+        -EnvironmentAdminName $EnvironmentAdminName `
+        -EnvironmentAdminPassword $EnvironmentAdminPassword
+
+    <# Read environment Ids from file .\environmentIds.txt:
+        a337c8e0-01bb-42a0-8a96-c979b8e988a0
+        f4554dd6-7c3f-4c46-9a9b-b51af94f36e7
+    #>
+    [string[]]$environmentIds = Get-Content -Path .\environmentIds.txt
+
+    # 1. Get Teams environments
+    # 2. Get the specified policy
+    # 3. Relace environments for OnlyEnvironments type
+    # 4. Add environments to ExceptEnvironments policy
+    UpdatePolicyEnvironmentsForTeams  `
+        -OnlyEnvironmentsPolicyName "9d903089-f712-4877-8e99-f6c96bd615b7" `
+        -OnlyEnvironmentsPolicyDisplayName "Policy test for Teams" `
+        -ExceptEnvironmentsPolicyName "2ab49607-12fc-4b7d-8ee7-d21576561081" `
+        -ExceptEnvironmentsPolicyDisplayName "Exception policy test for teams" `
+        -ExceptionEnvironmentIds $environmentIds
 
     $EndTime = Get-Date
     $TimeSpan = New-TimeSpan -Start $StartTime -End $EndTime

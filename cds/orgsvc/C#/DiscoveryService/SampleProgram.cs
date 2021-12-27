@@ -7,18 +7,26 @@ using System.Configuration;
 
 namespace PowerApps.Samples
 {
+    /// <summary>
+    /// This sample has been updated work with Power Platform (online only).
+    /// </summary>
     public partial class SampleProgram
     {
+        //These sample application registration values are available for all online instances.
+        public static string clientId = "51f81489-12ee-4a9e-aaae-a2591f45987d";
+        public static string redirectUrl = "app://58145B91-0C36-4500-8554-080854F2AC97";
+
+
         static void Main(string[] args)
         {
             string username = "yourUserName@yourOrgName.onmicrosoft.com";
             string password = "yourPassword";
 
-            //Set the dataCenter if you know it, otherwise use DataCenter.Unknown to search all.
-            DataCenter dataCenter = DataCenter.Unknown;
+            //Set the Cloud if you know it, otherwise use Cloud.Unknown to search Commercial.
+            Cloud cloud = Cloud.Unknown;
 
-            //Get all environments for the selected data center;
-            List<OrganizationDetail> orgs = GetAllOrganizations(username, password, dataCenter);
+            //Get all environments for the selected data center.
+            List<OrganizationDetail> orgs = GetAllOrganizations(username, password, cloud);
 
             if (orgs.Count.Equals(0))
             {
@@ -36,11 +44,11 @@ namespace PowerApps.Samples
             {
                 number++;
 
-          //Get the Organization Service URL
-          string fullOrgServiceUrl = o.Endpoints[EndpointType.OrganizationService];
+                //Get the Organization Service URL
+                string fullOrgServiceUrl = o.Endpoints[EndpointType.OrganizationService];
 
-          // Trim '/XRMServices/2011/Organization.svc' from the end.
-          string shortOrgServiceUrl = fullOrgServiceUrl.Substring(0, fullOrgServiceUrl.Length - 34);
+                // Trim '/XRMServices/2011/Organization.svc' from the end.
+                string shortOrgServiceUrl = fullOrgServiceUrl.Substring(0, fullOrgServiceUrl.Length - 34);
 
                 Console.WriteLine("{0} Name: {1} URL: {2}", number, o.FriendlyName, shortOrgServiceUrl);
             });
@@ -60,10 +68,13 @@ namespace PowerApps.Samples
 
                     //Use the selected serviceUrl with CrmServiceClient to get the UserId
 
-                    string conn = $@"AuthType=Office365;
+                    string conn = $@"AuthType=OAuth;
                          Url={serviceUrl};
                          UserName={username};
                          Password={password};
+                         ClientId={clientId};
+                         RedirectUri={redirectUrl};
+                         Prompt=Auto;
                          RequireNewInstance=True";
 
                     using (CrmServiceClient svc = new CrmServiceClient(conn))

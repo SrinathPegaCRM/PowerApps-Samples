@@ -2,8 +2,8 @@
 languages:
 - csharp
 products:
-- dotnet
-- powerapps
+- power-platform
+- power-apps
 page_type: sample
 description: "This sample shows how to execute multiple organization message requests by using a single web service method call, passing ExecuteMultipleRequest as a parameter in Microsoft Dataverse. [SOAP]"
 ---
@@ -34,7 +34,7 @@ In order to simulate the scenario described in [What this sample does](#what-thi
 1. The `ExecuteMultipleRequest` method creates the `ExecuteMultipleRequest` object.
 1. The `ExecutingMultipleSettings` method assigns settings that define execution behavior: continue on error, return responses.
 1. The `OrganizationRequestCollection` method creates an empty organization request collection.
-1. The `CreateRequest` method is added for each entity to the request collection.
+1. The `CreateRequest` method is added for each table to the request collection.
 1. The `GetCollectionOdEntitiesToUpdate` class updates the entities that are previously created.
 
 
